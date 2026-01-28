@@ -1,0 +1,553 @@
+<!-- OPTION 2: Pink Gradient (New Arrivals ke hisab se) -->
+<ion-header>
+  <ion-navbar style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" color="primary">
+    <ion-title style="color: white; font-weight: 900; letter-spacing: 1.5px;">Product Catalogue</ion-title>
+    <ion-buttons end *ngIf="constant.UserLoggedInData.loggedInUserType == 'Employee'">
+      <button class="wishlist-header-btn" (click)="Wishlist()">
+        <ion-icon [name]="isWishlisted ? 'heart' : 'heart-outline'" [class.active]="isWishlisted">
+        </ion-icon>
+        <span class="wishlist-text">Wishlist</span>
+      </button>
+    </ion-buttons>
+
+    <ion-buttons end *ngIf="this.constant.UserLoggedInData.loggedInUserType != 'Employee'">
+      <button ion-button icon-only class="cart-btn" (click)="goToCart()">
+        <ion-icon name="cart" class="cart-icon" style="color: white;"></ion-icon>
+      </button>
+
+    </ion-buttons>
+  </ion-navbar>
+  <ion-toolbar>
+    <div class="search add-search">
+      <div class="filter">
+        <ion-searchbar type='text' name="master" [(ngModel)]="filter.search" (keydown.enter)="getSearch()">
+        </ion-searchbar>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <div class="banner-section" *ngIf="appbanner.length > 0">
+    <ion-slides #bannerSlides [autoplay]="4000" [speed]="400" [pager]="true" *ngIf="appbanner.length "
+      [initialSlide]="0" pager autoplay="1000" speed="1000">
+      <ion-slide class="banner-slide" *ngFor="let row of appbanner">
+        <img src="{{bannerURL+row.banner}}" (click)="goToProductDetailsBanner(row)" class="banner-img">
+      </ion-slide>
+    </ion-slides>
+  </div>
+
+  <div class="stock-section">
+    <div class="stock-header">
+      <ion-icon name="flash" class="flash-icon"></ion-icon>
+      <h2>STOCK INWARD TODAY</h2>
+      <ion-icon name="flash" class="flash-icon"></ion-icon>
+    </div>
+
+    <div class="products-scroll" *ngIf="InwordTodayList.length; else noDataBlockInword">
+      <div class="product-card" *ngFor="let product of InwordTodayList" (click)="goToProductDetails(product)">
+        <div class="badge-container" *ngIf="product?.badge">
+          <span class="badge" [ngClass]="getBadgeClass(product.badge)">
+            {{ product.badge }}
+          </span>
+        </div>
+
+        <!-- <div class="product-image-container">
+          <img src="{{this.url+product.image}}" class="product-image" />
+        </div> -->
+        <div class="product-image-container">
+          <ng-container *ngIf="product.image; else noImage">
+            <img src="{{this.url+product.image}}" class="product-image" />
+          </ng-container>
+
+          <ng-template #noImage>
+            <div class="no-image-box">
+              <i class="material-icons">image_not_supported</i>
+              <span>No Image Available</span>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="product-info">
+          <h3 class="product-name">{{ product.product_name }}</h3>
+          <!-- <p class="product-color">{{ product.color }}</p> -->
+          <div class="price-row">
+            <p class="product-price">₹{{ product.mrp }}</p>
+            <ion-icon name="cart" class="cart-icon"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noDataBlockInword>
+      <div class="no-data-box">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <h4>No Products Available</h4>
+        <p>STOCK INWARD TODAY products will appear here once available.</p>
+      </div>
+    </ng-template>
+
+    <button class="view-all-btn" [disabled]="!InwordTodayList.length" [class.disabled]="!InwordTodayList.length"
+      (click)="viewProduct('stock_inword_today')">
+      View All Stock
+      <ion-icon name="arrow-forward"></ion-icon>
+    </button>
+  </div>
+
+  <!-- New Arrivals Section -->
+  <div class="new-arrivals-section">
+    <div class="section-header">
+      <div class="sparkle-icon">✨</div>
+      <h2 class="section-title">NEW ARRIVALS</h2>
+      <div class="sparkle-icon">✨</div>
+    </div>
+
+    <ion-slides [pager]="true" [slidesPerView]="1.1" [spaceBetween]="16" [centeredSlides]="true"
+      *ngIf="newArrivals.length; else noDataBlocknewArrivals">
+
+      <ion-slide *ngFor="let arrival of newArrivals">
+        <div class="arrival-card" (click)="goToProductDetails(arrival)">
+
+          <div class="card-header">
+            <h3>{{ arrival.product_name }}</h3>
+            <p class="subtitle">
+              AVAILABLE IN {{ arrival?.color?.length || 0 }} COLORS
+            </p>
+          </div>
+
+          <div class="product-showcase">
+            <ng-container *ngIf="arrival.image; else noImage">
+              <img [src]="url + arrival.image" alt="Product Image" class="product-img" />
+            </ng-container>
+
+            <ng-template #noImage>
+              <div class="no-image-box">
+                <i class="material-icons">image_not_supported</i>
+                <span>No Image Available</span>
+              </div>
+            </ng-template>
+          </div>
+
+
+          <div class="card-footer">
+            <div class="product-details">
+              <p class="mrp-text">MRP: ₹{{ arrival.mrp }}</p>
+            </div>
+          </div>
+
+        </div>
+      </ion-slide>
+    </ion-slides>
+
+
+    <ng-template #noDataBlocknewArrivals>
+      <div class="no-data-box">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <h4>No Products Available</h4>
+        <p>NEW ARRIVALS products will appear here once available.</p>
+      </div>
+    </ng-template>
+
+
+    <button class="explore-btn" [disabled]="!newArrivals.length" [class.disabled]="!newArrivals.length"
+      (click)="viewProduct('new_arrivals')">
+      <ion-icon name="eye"></ion-icon>
+      Explore All
+    </button>
+  </div>
+
+
+
+
+  <!-- Handpicked For You Section -->
+  <div class="handpicked-section">
+    <div class="section-badge">
+      <ion-icon name="flame" class="flame-icon"></ion-icon>
+      <span>HANDPICKED FOR YOU!</span>
+    </div>
+    <p class="section-subtitle">🔥 Bestsellers Trusted by Other Distributors!</p>
+
+    <div class="products-scroll" *ngIf="HandpickedForYouList.length; else noDataBlockHANDPICKED">
+      <div class="product-card-hand" *ngFor="let product of HandpickedForYouList" (click)="goToProductDetails(product)">
+        <!-- Image -->
+        <div class="product-image-container">
+          <ng-container *ngIf="product?.image; else noImage">
+            <img [src]="url + product.image" alt="Product Image" class="product-image" />
+          </ng-container>
+
+          <ng-template #noImage>
+            <div class="no-image-box">
+              <i class="material-icons">image_not_supported</i>
+              <span>No Image Available</span>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="product-info">
+          <h3 class="product-name">{{ product.product_name }}</h3>
+          <p class="product-price">₹{{ product.mrp }}</p>
+        </div>
+      </div>
+    </div>
+
+
+    <ng-template #noDataBlockHANDPICKED>
+      <div class="no-data-box">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <h4>No Products Available</h4>
+        <p>Handpicked products will appear here once available.</p>
+      </div>
+    </ng-template>
+
+
+    <button class="view-all-btn-light" [disabled]="!HandpickedForYouList.length"
+      [class.disabled]="!HandpickedForYouList.length" (click)="viewProduct('handpicked_for_you')">
+      View All
+    </button>
+  </div>
+
+
+  <!-- Thala Favourites Section -->
+  <div class="thala-section">
+    <div class="thala-header">
+      <div class="celebrity-image-wrapper">
+        <div class="trophy-container">
+          <img src="assets/icon/golden.png" class="golden-shoe-icon" />
+        </div>
+        <ion-icon name="star" class="star-decoration star-1"></ion-icon>
+        <ion-icon name="star" class="star-decoration star-2"></ion-icon>
+        <ion-icon name="star" class="star-decoration star-3"></ion-icon>
+        <ion-icon name="star" class="star-decoration star-4"></ion-icon>
+        <ion-icon name="star" class="star-decoration star-5"></ion-icon>
+        <ion-icon name="star" class="star-decoration star-6"></ion-icon>
+
+        <div class="overlay-gradient"></div>
+      </div>
+
+      <div class="thala-title-overlay">
+        <h2 class="thala-title">{{ thalaFavourites.celebrityName }}</h2>
+        <p class="thala-subtitle">{{ thalaFavourites.title }}</p>
+      </div>
+    </div>
+
+    <div class="products-container" *ngIf="ThalaFavouritesList.length; else noDataBlockFavourites">
+      <div class="products-scroll-dark">
+        <div class="product-card-dark" *ngFor="let product of ThalaFavouritesList"
+          (click)="goToProductDetails(product)">
+          <div class="product-image-container">
+            <ng-container *ngIf="product?.image; else noImage">
+              <img [src]="url + product.image" alt="Product Image" class="product-image" />
+            </ng-container>
+
+            <ng-template #noImage>
+              <div class="no-image-box">
+                <ion-icon name="image-outline"></ion-icon>
+                <span>No Image</span>
+              </div>
+            </ng-template>
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">{{ product.product_name }}</h3>
+            <p class="product-price">₹{{ product.mrp }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noDataBlockFavourites>
+      <div class="products-container">
+        <div class="no-data-box">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <h4>No Products Available</h4>
+          <p>Thala Favourites products will appear here once available.</p>
+        </div>
+      </div>
+    </ng-template>
+
+    <div class="button-wrapper">
+      <button class="view-all-btn-primary" [disabled]="!ThalaFavouritesList.length"
+        [class.disabled]="!ThalaFavouritesList.length" (click)="viewProduct('thala_favourites')">
+        View All
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Previously Purchased Section -->
+  <!-- <div class="previous-section">
+    <div class="section-header-center">
+      <div class="line-decorator"></div>
+      <h2>PREVIOUSLY PURCHASED ITEMS</h2>
+      <div class="line-decorator"></div>
+    </div>
+
+    <div class="products-scroll">
+      <div class="product-card-prev" *ngFor="let product of previouslyPurchased" (click)="goToProductDetails(product)">
+        <div class="reorder-badge">
+          <ion-icon name="refresh"></ion-icon>
+        </div>
+        <div class="product-image-container">
+          <img [src]="product.image" [alt]="product.name" class="product-image" />
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">{{ product.name }}</h3>
+          <p class="product-color">{{ product.color }}</p>
+          <p class="product-price">₹{{ product.price }}</p>
+          <button class="reorder-btn" (click)="goToProductDetails(product); $event.stopPropagation()">
+            <ion-icon name="cart"></ion-icon>
+            Reorder
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <button class="view-all-btn-light" (click)="viewAllPrevious()">
+      View All
+    </button>
+  </div> -->
+
+
+  <!-- Explore by Gender Section -->
+  <div class="gender-section">
+    <div class="section-header-wave">
+      <div class="wave-icon">〰️</div>
+      <h2>EXPLORE BY GENDER</h2>
+      <div class="wave-icon">〰️</div>
+    </div>
+
+    <div class="gender-grid">
+      <div class="gender-card" *ngFor="let gender of exploreByGender" (click)="goToGenderCategory(gender.category)">
+        <div class="gender-image-wrapper">
+          <img [src]="gender.image" [alt]="gender.name" class="gender-image" />
+          <div class="gender-overlay"></div>
+        </div>
+        <h3 class="gender-name">{{ gender.name }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Explore by Categories Section -->
+  <div class="categories-section">
+    <div class="section-header-wave">
+      <div class="wave-icon">〰️</div>
+      <h2>EXPLORE BY CATEGORIES</h2>
+      <div class="wave-icon">〰️</div>
+    </div>
+
+    <div class="categories-grid">
+      <div class="category-card" *ngFor="let category of exploreByCategories" (click)="goToCategory(category)">
+        <div class="category-image-wrapper">
+          <img [src]="category.image" [alt]="category.name" class="category-image" />
+          <div class="category-overlay"></div>
+        </div>
+        <h3 class="category-name">{{ category.name }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Special Collections Section -->
+  <div class="collections-section">
+    <div class="section-header-wave">
+      <div class="wave-icon">〰️</div>
+      <h2>SPECIAL COLLECTIONS</h2>
+      <div class="wave-icon">〰️</div>
+    </div>
+
+    <ion-slides [pager]="true" [slidesPerView]="1.2" [spaceBetween]="16" [centeredSlides]="true"
+      *ngIf="SpecialCollectionList.length; else noDataBlockCOLLECTIONS">
+      <ion-slide *ngFor="let collection of SpecialCollectionList ">
+        <div class="collection-card" (click)="goToProductDetails(collection)">
+          <div class="collection-badge">{{ collection.badge }}</div>
+          <div class="discount-tag">{{ collection.mrp }}</div>
+          <!-- <div class="collection-image-wrapper">
+            <img [src]="collection.image" [alt]="collection.name" class="collection-image" />
+          </div> -->
+          <div class="collection-image-wrapper">
+            <ng-container *ngIf="collection?.image; else noImage">
+              <img [src]="url + collection.image" [alt]="collection.product_name" class="collection-image" />
+            </ng-container>
+
+            <ng-template #noImage>
+              <div class="no-image-box">
+                <i class="material-icons">image_not_supported</i>
+                <span>No Image Available</span>
+              </div>
+            </ng-template>
+          </div>
+          <div class="collection-info">
+            <h3>{{ collection.product_name }}</h3>
+            <p class="product-price">₹{{ collection.mrp }}</p>
+            <!-- <button class="shop-now-btn">
+              Shop Now
+              <ion-icon name="arrow-forward"></ion-icon>
+            </button> -->
+          </div>
+        </div>
+      </ion-slide>
+    </ion-slides>
+
+    <ng-template #noDataBlockCOLLECTIONS>
+      <div class="no-data-box">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <h4>No Products Available</h4>
+        <p>SPECIAL COLLECTIONS products will appear here once available.</p>
+      </div>
+    </ng-template>
+
+
+
+    <button class="view-all-btn-collections" [disabled]="!SpecialCollectionList.length"
+      [class.disabled]="!SpecialCollectionList.length" (click)="viewProduct('special_collections')">
+      View All Collections
+      <ion-icon name="albums"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Explore by Collections Section -->
+  <div class="collections-type-section">
+    <div class="section-header-wave">
+      <div class="wave-icon">〰️</div>
+      <h2>EXPLORE BY COLLECTIONS</h2>
+      <div class="wave-icon">〰️</div>
+    </div>
+    <div class="collections-type-grid">
+      <div class="collection-type-card" *ngFor="let collection of exploreByCollections"
+        [class.dark-theme]="collection.theme === 'dark'" [class.light-theme]="collection.theme === 'light'"
+        [class.blue-theme]="collection.theme === 'blue'" [class.white-theme]="collection.theme === 'white'"
+        (click)="goToCollection(collection)">
+        <div class="collection-type-image-wrapper">
+          <img [src]="collection.image" [alt]="collection.name" class="collection-type-image" />
+          <div class="collection-type-overlay"></div>
+        </div>
+        <div class="collection-type-name-wrapper">
+          <h3 class="collection-type-name">{{ collection.name }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="sole-type-section">
+    <div class="section-header-wave">
+      <div class="wave-icon">〰️</div>
+      <h2>SOLE TYPE</h2>
+      <div class="wave-icon">〰️</div>
+    </div>
+
+    <ion-slides class="sole-slides" [pager]="true" [slidesPerView]="1.2" [spaceBetween]="12" [centeredSlides]="true">
+      <ion-slide *ngFor="let sole of soleTypes" (click)="goToSoleType(sole)">
+        <div class="sole-type-card">
+          <div class="sole-icon-badge"
+            [ngStyle]="{'background': sole.badgeColor || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}">
+            <ion-icon [name]="sole.icon || 'footsteps'"></ion-icon>
+          </div>
+          <div class="sole-type-image-wrapper">
+            <img [src]="sole.image" [alt]="sole.name" class="sole-type-image" />
+            <div class="image-overlay"></div>
+          </div>
+          <h3 class="sole-type-name">{{ sole.name }}</h3>
+          <p class="view-details">View Details</p>
+        </div>
+      </ion-slide>
+    </ion-slides>
+  </div>
+
+  <div class="clearance-mega-banner" *ngIf="clearanceSale?.enabled" (click)="viewProduct('sale_shoes_dis')">
+    <div class="clearance-bg-animation"></div>
+    <div class="clearance-bg-image" [style.background-image]="'url(' + clearanceSale?.bgImage + ')'"></div>
+    <div class="clearance-content-wrapper">
+      <div class="clearance-top-section">
+        <div class="flash-badge">
+          <ion-icon name="flash" class="flash-icon"></ion-icon>
+          <span>LIMITED TIME</span>
+        </div>
+        <div class="days-remaining">
+          {{ getDaysRemaining() }} DAYS LEFT
+        </div>
+      </div>
+      <div class="clearance-main-content">
+        <div class="discount-explosion">
+          <div class="discount-circle">
+            <div class="discount-text">
+              <span class="discount-number">{{ clearanceSale?.discount }}%</span>
+              <span class="discount-label">OFF</span>
+            </div>
+          </div>
+          <div class="burst-animation burst-1"></div>
+          <div class="burst-animation burst-2"></div>
+          <div class="burst-animation burst-3"></div>
+          <div class="burst-animation burst-4"></div>
+        </div>
+        <div class="clearance-text-content">
+          <h1 class="mega-title">{{ clearanceSale?.title }}</h1>
+          <p class="mega-subtitle">{{ clearanceSale?.subtitle }}</p>
+          <p class="mega-tagline">{{ clearanceSale?.tagline }}</p>
+          <div class="feature-pills">
+            <div class="feature-pill" *ngFor="let feature of clearanceSale?.features">
+              <ion-icon [name]="feature.icon"></ion-icon>
+              <span>{{ feature.text }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="clearance-cta-section">
+        <button class="mega-cta-button">
+          <span class="btn-text">{{ clearanceSale?.buttonText }}</span>
+          <ion-icon name="arrow-forward-circle" class="btn-icon"></ion-icon>
+          <div class="btn-shine"></div>
+        </button>
+      </div>
+      <div class="floating-icons">
+        <ion-icon name="pricetag" class="float-icon icon-1"></ion-icon>
+        <ion-icon name="gift" class="float-icon icon-2"></ion-icon>
+        <ion-icon name="star" class="float-icon icon-3"></ion-icon>
+        <ion-icon name="trophy" class="float-icon icon-4"></ion-icon>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<div class="bottom-nav">
+
+  <div class="nav-item" (click)="goToOrderCatalogue()">
+    <i class="material-icons">category</i>
+    <span>Catalogue</span>
+  </div>
+
+  <div class="nav-item" (click)="goToAttendence()" *ngIf="UserType == 'sales_user'">
+    <i class="material-icons">event_available</i>
+    <span>Attendance</span>
+  </div>
+
+  <div class="nav-item" (click)="goToLead()" *ngIf="UserType == 'sales_user'">
+    <ion-icon name="people"></ion-icon>
+    <span>Enquiry</span>
+  </div>
+
+  <div class="nav-item" (click)="goToExpense('My')" *ngIf="UserType == 'sales_user'">
+    <i class="material-icons">account_balance_wallet</i>
+    <span>Expense</span>
+  </div>
+
+  <div class="nav-item" (click)="openMoreMenu()">
+    <i class="material-icons">apps</i>
+    <span>More</span>
+  </div>
+
+  <div class="nav-item center-nav" (click)="goToCheckin()" *ngIf="UserType == 'sales_user'">
+    <i class="material-icons center-icon" style="font-size: 35px;">location_on</i>
+  </div>
+
+</div>
+
+<!-- Scroll Indicator Arrow -->
+<!-- <div class="scroll-arrow-indicator" *ngIf="showScrollArrow" (click)="scrollToNext()">
+  <ion-icon name="chevron-forward"></ion-icon>
+</div>
+</div> -->

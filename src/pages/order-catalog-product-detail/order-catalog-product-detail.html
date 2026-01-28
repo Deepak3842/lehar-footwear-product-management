@@ -1,0 +1,117 @@
+<ion-header>
+  <ion-navbar class="premium-navbar">
+    <ion-title>Product Details</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="shareProduct()" class="nav-btn">
+        <ion-icon name="share"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="product-detail-content">
+
+  <div class="hero-section">
+    <ion-slides #productSlides [pager]="true" [loop]="false" class="hero-slider" (ionSlideDidChange)="onSlideChange()">
+      <ion-slide *ngFor="let color of availableColors; let i = index">
+        <div class="image-wrapper">
+          <img [src]="color.image ? (url + color.image) : null" class="hero-image" [alt]="color.color"
+            (error)="color.imageError = true" *ngIf="!color.imageError" />
+
+          <div class="image-placeholder" *ngIf="!color.image || color.imageError">
+            <ion-icon name="image"></ion-icon>
+            <p>No Image</p>
+          </div>
+        </div>
+      </ion-slide>
+    </ion-slides>
+
+    <button class="wishlist-btn" (click)="toggleWishlist()" [class.active]="isWishlisted">
+      <ion-icon [name]="isWishlisted ? 'heart' : 'heart-outline'"></ion-icon>
+    </button>
+
+    <div class="image-counter">
+      <span>{{ currentSlideIndex + 1 }}/{{ availableColors?.length }}</span>
+    </div>
+  </div>
+
+  <div class="content-card">
+
+    <div class="product-header">
+      <h1 class="product-title">{{ productName }}</h1>
+      <div class="pricing">
+        <span class="current-price">₹{{ productPrice }}</span>
+      </div>
+    </div>
+
+    <div class="variant-section">
+      <div class="section-title">
+        <h3>Colors</h3>
+      </div>
+
+      <div class="color-grid">
+        <div class="color-item" *ngFor="let color of availableColors; let i = index"
+          [class.active]="selectedColorIndex === i" (click)="selectColor(i)">
+          <div class="color-image-wrapper">
+            <img [src]="color.image ? (url + color.image) : null" class="color-image" [alt]="color.color"
+              (error)="color.thumbError = true" *ngIf="!color.thumbError" />
+
+            <div class="thumb-placeholder" *ngIf="!color.image || color.thumbError">
+              <ion-icon name="image"></ion-icon>
+            </div>
+            <div class="check-overlay" *ngIf="selectedColorIndex === i">
+              <ion-icon name="checkmark-circle"></ion-icon>
+            </div>
+          </div>
+          <p class="color-name">{{ color.color}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="banner-section">
+      <div class="banner-header">
+        <h3 class="banner-title">Product Gallery</h3>
+        <p class="banner-subtitle">Tap to view full size</p>
+      </div>
+
+      <div class="banner-images-container">
+        <div class="banner-item" *ngFor="let color of availableColors; let i = index"
+          [class.active]="selectedColorIndex === i">
+          <div class="banner-wrapper" (click)="imageModal(this.url+color.image)">
+            <img [src]="color.image ? (url + color.image) : null" class="product-banner" [alt]="color.color"
+              (error)="color.imageError = true" *ngIf="!color.imageError" />
+
+            <div class="image-placeholder" *ngIf="!color.image || color.imageError">
+              <ion-icon name="image"></ion-icon>
+              <p>No Image</p>
+            </div>
+
+            <button class="download-btn" (click)="downloadImage(this.url+color.image, $event)">
+              <ion-icon name="download"></ion-icon>
+            </button>
+
+            <!-- <div class="banner-color-label" [ngStyle]="{'background': 'linear-gradient(135deg,' + color.uiGradient.start + ',' + color.uiGradient.end + ')'}">
+              <span>{{ color.color }}</span>
+            </div> -->
+             <div class="banner-color-label" [ngStyle]="{'background': 'linear-gradient(135deg,' + color.uiGradient.start + ',' + color.uiGradient.end + ')'}">
+              <span>{{ color.color_name }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-spacer"></div>
+
+</ion-content>
+
+<ion-footer class="action-footer">
+  <div class="action-container">
+    <button class="place-order-btn" [disabled]="!productPrice" (click)="placeOrder()">
+      Place Order
+    </button>
+    <span class="warn" *ngIf="!productPrice">Product Price is Not Available , So Button is Disabled..</span>
+  </div>
+</ion-footer>
