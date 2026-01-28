@@ -1,0 +1,52 @@
+{
+  "_from": "cordova-plugin-doze-optimize@^0.5.4",
+  "_id": "cordova-plugin-doze-optimize@0.5.4",
+  "_inBundle": false,
+  "_integrity": "sha512-mUM+n33oCalxJOMT8sNYfllHlxhaE6/9lrH52P49Q/Zz/e8FrFBLQf71UVipvrpz+MCgNPVSMO/7l6GmZ0/UBg==",
+  "_location": "/cordova-plugin-doze-optimize",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "cordova-plugin-doze-optimize@^0.5.4",
+    "name": "cordova-plugin-doze-optimize",
+    "escapedName": "cordova-plugin-doze-optimize",
+    "rawSpec": "^0.5.4",
+    "saveSpec": null,
+    "fetchSpec": "^0.5.4"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-doze-optimize/-/cordova-plugin-doze-optimize-0.5.4.tgz",
+  "_shasum": "2aa6e1d86513369fa98ef34928409843efbad5ae",
+  "_spec": "cordova-plugin-doze-optimize@^0.5.4",
+  "_where": "D:\\Advance_Laminates\\Advancebasiq360_app",
+  "author": {
+    "name": "thomas550i"
+  },
+  "bugs": {
+    "url": "https://github.com/thomas550i/cordova-plugin-doze-Optimize/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova.plugin.DozeOptimize",
+    "platforms": [
+      "android"
+    ]
+  },
+  "deprecated": false,
+  "description": "If you want to run your application in backround mode and it shoud standby even battery optimization enabled, then this Cordova plugin is used to check the doze or battery optimization status and also it help to request whitlest popup for battery optimization",
+  "homepage": "https://github.com/thomas550i/cordova-plugin-doze-Optimize#readme",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "license": "ISC",
+  "name": "cordova-plugin-doze-optimize",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomas550i/cordova-plugin-doze-Optimize.git"
+  },
+  "version": "0.5.4"
+}

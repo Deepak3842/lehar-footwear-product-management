@@ -1,0 +1,66 @@
+{
+  "_args": [
+    [
+      "uk.co.workingedge.phonegap.plugin.launchnavigator@5.0.7",
+      "D:\\Project\\Dorant\\Dorannt_Hardware_Basiq360_Product_App"
+    ]
+  ],
+  "_from": "uk.co.workingedge.phonegap.plugin.launchnavigator@5.0.7",
+  "_id": "uk.co.workingedge.phonegap.plugin.launchnavigator@5.0.7",
+  "_inBundle": false,
+  "_integrity": "sha512-uRqXuZfxRiT8z+XLyOyhuOFSacb5vX/aYMkY9TjXIkCNnmCR0p5lpBGSCgNBzlJkkVp3bD96NfJGq41pNS3L8Q==",
+  "_location": "/uk.co.workingedge.phonegap.plugin.launchnavigator",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "uk.co.workingedge.phonegap.plugin.launchnavigator@5.0.7",
+    "name": "uk.co.workingedge.phonegap.plugin.launchnavigator",
+    "escapedName": "uk.co.workingedge.phonegap.plugin.launchnavigator",
+    "rawSpec": "5.0.7",
+    "saveSpec": null,
+    "fetchSpec": "5.0.7"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/uk.co.workingedge.phonegap.plugin.launchnavigator/-/uk.co.workingedge.phonegap.plugin.launchnavigator-5.0.7.tgz",
+  "_spec": "5.0.7",
+  "_where": "D:\\Project\\Dorant\\Dorannt_Hardware_Basiq360_Product_App",
+  "author": {
+    "name": "Dave Alden"
+  },
+  "bugs": {
+    "url": "https://github.com/dpa99c/phonegap-launch-navigator/issues"
+  },
+  "cordova": {
+    "id": "uk.co.workingedge.phonegap.plugin.launchnavigator",
+    "platforms": [
+      "android",
+      "ios",
+      "windows"
+    ]
+  },
+  "cordova_name": "Launch Navigator",
+  "description": "Cordova/Phonegap plugin to navigate to a destination using native navigation apps on Android, iOS, and Windows",
+  "homepage": "https://github.com/dpa99c/phonegap-launch-navigator#readme",
+  "issue": "https://github.com/dpa99c/phonegap-launch-navigator/issues",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova",
+    "phonegap",
+    "ios",
+    "android",
+    "windows",
+    "navigation",
+    "navigator"
+  ],
+  "license": "MIT",
+  "name": "uk.co.workingedge.phonegap.plugin.launchnavigator",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dpa99c/phonegap-launch-navigator.git"
+  },
+  "types": "./uk.co.workingedge.phonegap.plugin.launchnavigator.d.ts",
+  "version": "5.0.7"
+}
